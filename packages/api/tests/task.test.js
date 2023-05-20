@@ -1,4 +1,4 @@
-import chai from 'chai';
+import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 chai.use(chaiHttp);
 import server from '../src/server.js';
@@ -152,6 +152,24 @@ describe('Task tests', () => {
     chai
       .request(server)
       .delete(`/task/${task_id}`)
+      .set('user_id', user_id)
+      .set('farm_id', farm_id)
+      .end(callback);
+  }
+
+  function pinTaskRequest({ user_id, farm_id }, task_id, callback) {
+    chai
+      .request(server)
+      .post(`/task/pins/${task_id}`)
+      .set('user_id', user_id)
+      .set('farm_id', farm_id)
+      .end(callback);
+  }
+
+  function unpinTaskRequest({ user_id, farm_id }, task_id, callback) {
+    chai
+      .request(server)
+      .delete(`/task/pins/${task_id}`)
       .set('user_id', user_id)
       .set('farm_id', farm_id)
       .end(callback);
@@ -2512,6 +2530,248 @@ describe('Task tests', () => {
 
     test('Farm worker must not be able to patch task wage', async (done) => {
       testWithRole(3, 30, done);
+    });
+  });
+
+  describe('Pin task', () => {
+    const testWithRoleAndFarmId = async (userRoleId, sameUser, tests, done) => {
+      const [{ user_id, farm_id }] = await mocks.userFarmFactory({}, fakeUserFarm(userRoleId));
+
+      let targetFarmId = farm_id;
+      let targetUserId = user_id;
+      if (!sameUser) {
+        const [{ user_id: user_id_2, farm_id: farm_id_2 }] = await mocks.userFarmFactory(
+          {},
+          fakeUserFarm(1),
+        );
+        targetFarmId = farm_id_2;
+        targetUserId = user_id_2;
+      }
+
+      const [{ task_id }] = await mocks.taskFactory({ promisedUser: [{ user_id: targetUserId }] });
+      const [{ location_id }] = await mocks.locationFactory({
+        promisedFarm: [{ farm_id: targetFarmId }],
+      });
+
+      await mocks.location_tasksFactory({
+        promisedTask: [{ task_id }],
+        promisedField: [{ location_id }],
+      });
+
+      pinTaskRequest({ user_id, farm_id }, task_id, async (err, res) => {
+        const updated_task = await getTask(task_id);
+        await tests(err, res, updated_task);
+        done();
+      });
+    };
+
+    test('Farm owner should be able to pin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        1,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(200);
+        },
+        done,
+      );
+    });
+
+    test('Farm manager should be able to pin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        2,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(200);
+        },
+        done,
+      );
+    });
+
+    test('EO should be able to pin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        5,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(200);
+        },
+        done,
+      );
+    });
+
+    test('Farm worker should NOT be able to pin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        3,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('Farm owner should be NOT able to pin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        1,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('Farm manager should NOT be able to pin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        2,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('EO should NOT be able to pin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        5,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('Farm worker should NOT be able to pin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        3,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+  });
+
+  describe('Unpin task', () => {
+    const testWithRoleAndFarmId = async (userRoleId, sameUser, tests, done) => {
+      const [{ user_id, farm_id }] = await mocks.userFarmFactory({}, fakeUserFarm(userRoleId));
+
+      let targetFarmId = farm_id;
+      let targetUserId = user_id;
+      if (!sameUser) {
+        const [{ user_id: user_id_2, farm_id: farm_id_2 }] = await mocks.userFarmFactory(
+          {},
+          fakeUserFarm(1),
+        );
+        targetFarmId = farm_id_2;
+        targetUserId = user_id_2;
+      }
+
+      const [{ task_id }] = await mocks.taskFactory({ promisedUser: [{ user_id: targetUserId }] });
+      const [{ location_id }] = await mocks.locationFactory({
+        promisedFarm: [{ farm_id: targetFarmId }],
+      });
+
+      await mocks.location_tasksFactory({
+        promisedTask: [{ task_id }],
+        promisedField: [{ location_id }],
+      });
+
+      unpinTaskRequest({ user_id, farm_id }, task_id, async (err, res) => {
+        const updated_task = await getTask(task_id);
+        await tests(err, res, updated_task);
+        done();
+      });
+    };
+
+    test('Farm owner should be able to unpin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        1,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(200);
+        },
+        done,
+      );
+    });
+
+    test('Farm manager should be able to unpin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        2,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(200);
+        },
+        done,
+      );
+    });
+
+    test('EO should be able to unpin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        5,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(200);
+        },
+        done,
+      );
+    });
+
+    test('Farm worker should NOT be able to unpin a task at their farm', async (done) => {
+      testWithRoleAndFarmId(
+        3,
+        true,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('Farm owner should be NOT able to unpin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        1,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('Farm manager should NOT be able to unpin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        2,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('EO should NOT be able to unpin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        5,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
+    });
+
+    test('Farm worker should NOT be able to unpin a task at another farm', async (done) => {
+      testWithRoleAndFarmId(
+        3,
+        false,
+        (err, res, updated_task) => {
+          expect(res.status).to.equal(403);
+        },
+        done,
+      );
     });
   });
 });
