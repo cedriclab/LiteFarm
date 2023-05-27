@@ -93,6 +93,27 @@ const emitRefreshToken = async (info) => {
   return emitRefreshToken(SingleUseTokenType.REFRESH, info, { length: REFRESH_TOKEN_LENGTH });
 };
 
+const validateSingleUseToken = async (type, token) => {
+  // Use the token and the type to create a redis key
+  const key = `token.${type.toLowerCase()}.${token}`;
+
+  const payload = await client.get(key);
+
+  if (payload) {
+    try {
+      return JSON.parse(payload);
+    } catch (e) {
+      console.error(
+        `An entry exists for the key "${key}", but it cannot be processed because ->`,
+        e,
+      );
+      return null;
+    }
+  }
+
+  return null;
+};
+
 export {
   createToken,
   expireTime,
@@ -102,4 +123,5 @@ export {
   SingleUseTokenType,
   emitRefreshToken,
   emitSingleUseToken,
+  validateSingleUseToken,
 };
