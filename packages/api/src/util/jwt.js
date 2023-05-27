@@ -42,6 +42,17 @@ function createToken(type, payload) {
   });
 }
 
+const getCookieOptions = (cookie, opts = {}) => {
+  return {
+    //signed: true,
+    httpOnly: true,
+    //domain: 'localhost:3001', // TODO - make based on config
+    sameSite: 'Lax',
+    //path: '/*',
+    ...opts,
+  };
+};
+
 /**
  * @function createRandomToken
  * @description Creates a cryptographically safe random string of a given length
@@ -124,4 +135,5 @@ export {
   emitRefreshToken,
   emitSingleUseToken,
   validateSingleUseToken,
+  getCookieOptions,
 };
