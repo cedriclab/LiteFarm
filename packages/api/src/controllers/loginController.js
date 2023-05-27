@@ -23,7 +23,7 @@ import { emails, sendEmail } from '../templates/sendEmailTemplate.js';
 import parser from 'ua-parser-js';
 import UserLogModel from '../models/userLogModel.js';
 import EmailModel from '../models/emailTokenModel.js';
-import { createToken } from '../util/jwt.js';
+import { createToken, emitRefreshToken, getCookieOptions } from '../util/jwt.js';
 
 const loginController = {
   authenticateUser() {
@@ -91,6 +91,13 @@ const loginController = {
         }
 
         const id_token = await createToken('access', { user_id: userData.user_id });
+
+        // Here we generate the refresh token
+        const refreshToken = await emitRefreshToken({ user_id: userID });
+
+        // Here we set the refresh token as an HTTP-only (see getCookieOptions) cookie
+        res.cookie('refreshToken', refreshToken, getCookieOptions());
+
         return res.status(200).send({
           id_token,
           user: userData,
@@ -140,6 +147,13 @@ const loginController = {
         if (user?.status_id === 2) {
           await sendMissingInvitations(user);
         }
+
+        // Here we generate the refresh token
+        const refreshToken = await emitRefreshToken({ user_id });
+
+        // Here we set the refresh token as an HTTP-only (see getCookieOptions) cookie
+        res.cookie('refreshToken', refreshToken, getCookieOptions());
+
         return res.status(201).send({
           id_token,
           user: {
