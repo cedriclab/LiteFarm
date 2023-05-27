@@ -104,13 +104,18 @@ const emitRefreshToken = async (info) => {
   return emitRefreshToken(SingleUseTokenType.REFRESH, info, { length: REFRESH_TOKEN_LENGTH });
 };
 
-const validateSingleUseToken = async (type, token) => {
+const validateSingleUseToken = async (type, token, invalidateToken = true) => {
   // Use the token and the type to create a redis key
   const key = `token.${type.toLowerCase()}.${token}`;
 
   const payload = await client.get(key);
 
   if (payload) {
+    // By default, we invalidate the token once it has been validated because they are single-use
+    if (invalidateToken) {
+      await client.del(key);
+    }
+
     try {
       return JSON.parse(payload);
     } catch (e) {
