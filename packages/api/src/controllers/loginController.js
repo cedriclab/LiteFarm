@@ -23,7 +23,12 @@ import { emails, sendEmail } from '../templates/sendEmailTemplate.js';
 import parser from 'ua-parser-js';
 import UserLogModel from '../models/userLogModel.js';
 import EmailModel from '../models/emailTokenModel.js';
-import { createToken, emitRefreshToken, getCookieOptions } from '../util/jwt.js';
+import {
+  createToken,
+  emitRefreshToken,
+  getCookieOptions,
+  validateSingleUseToken,
+} from '../util/jwt.js';
 
 const loginController = {
   authenticateUser() {
@@ -252,6 +257,59 @@ const loginController = {
         return res.status(400).json({
           error,
         });
+      }
+    };
+  },
+
+  createSessionFromToken() {
+    return async (req, res) => {
+      try {
+        const { type } = req.params;
+        const { token } = req.body;
+
+        // Validate the single-use token, get its payload, and invalidate it
+        const tokenPayload = await validateSingleUseToken(type, token, true);
+
+        if (!tokenPayload) {
+          return res.status(401).send();
+        }
+
+        const { user_id } = tokenPayload;
+
+        // TODO: add handlers for various types, which have some side-operations
+
+        const user = await UserModel.query().findById(user_id);
+
+        if (!user) {
+          // I think the only case we would get here is if someone deleted their account and the tried to use the token within the token validity period
+          return res.status(401).send();
+        }
+
+        const id_token = await createToken('access', { user_id });
+
+        // Here we generate the refresh token
+        const refreshToken = await emitRefreshToken({ user_id });
+
+        // Here we set the refresh token as an HTTP-only (see getCookieOptions) cookie
+        res.cookie('refreshToken', refreshToken, getCookieOptions());
+
+        // TODO: if NOT simple refresh token, log a login-attempt (or successful login)
+
+        // Here we send the response
+        return res.status(201).send({
+          id_token,
+          user: {
+            user_id,
+            email: user.email,
+            first_name: user.first_name,
+            language_preference: user.language_preference,
+            full_name: `${user.first_name} ${user.last_name}`,
+          },
+          isSignUp: false,
+          isInvited: user.status_id === 2,
+        });
+      } catch (err) {
+        return res.status(500).send();
       }
     };
   },
