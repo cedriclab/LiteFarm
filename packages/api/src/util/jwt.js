@@ -13,14 +13,14 @@ const DEFAULT_RANDOM_TOKEN_LENGTH = 32;
 const tokenType = {
   access: process.env.JWT_SECRET,
   invite: process.env.JWT_INVITE_SECRET,
-  passwordReset: process.env.JWT_RESET_SECRET,
+  passwordReset: process.env.JWT_RESET_SECRET, // may not be needed anymore
   farm: process.env.JWT_FARM_SECRET,
   scheduler: process.env.JWT_SCHEDULER_SECRET,
 };
 const expireTime = {
   access: ACCESS_TOKEN_EXPIRES_IN,
   invite: ACCESS_TOKEN_EXPIRES_IN,
-  passwordReset: RESET_PASSWORD_TOKEN_EXPIRES_IN,
+  passwordReset: RESET_PASSWORD_TOKEN_EXPIRES_IN, // may not be needed anymore
   farm: ACCESS_TOKEN_EXPIRES_IN,
   scheduler: SCHEDULER_TOKEN_EXPIRES_IN,
 };
@@ -92,7 +92,7 @@ const emitSingleUseToken = async (type, info, options) => {
   // create the random token
   const token = await createRandomToken(tokenLength);
 
-  const tokenPayload = { token, userId: info.user_id };
+  const tokenPayload = { type, token, userId: info.user_id };
 
   // Here, we set the expiration for the token
   const tokenExpiration = (options && options.expiration) || REFRESH_TOKEN_EXPIRATION;
@@ -120,12 +120,11 @@ const emitRefreshToken = async (info) => {
  * @function validateSingleUseToken
  * @description This function is the inverse of emitSingleUseToken, except that, if provided with the optional argument invalidateToken = true, it will have the side-effect of invalidating the provided token
  * @note IN NORMAL CASES, invalidateToken *should* be true because it is the mechanism whereby we can invalidate SINGLE-USE tokens after they have been used.
- * @param {String} type
  * @param {String} signedToken
  * @param {Boolean} invalidateToken
  * @returns {Object|Null}
  */
-const validateSingleUseToken = async (type, signedToken, invalidateToken = true) => {
+const validateSingleUseToken = async (signedToken, invalidateToken = true) => {
   const parsedPayload = await jwt.verify(signedToken, SINGLE_USE_TOKEN_SECRET).catch((error) => {
     console.error(
       `Could not decrypt signed single-use token because [likely it has expired]->`,
@@ -138,7 +137,7 @@ const validateSingleUseToken = async (type, signedToken, invalidateToken = true)
     return null;
   }
 
-  const { token } = parsedPayload;
+  const { token, type } = parsedPayload;
 
   // Use the token and the type to create a redis key
   const key = `token.${type.toLowerCase()}.${token}`;
@@ -157,7 +156,9 @@ const validateSingleUseToken = async (type, signedToken, invalidateToken = true)
     }
 
     try {
-      return JSON.parse(payload);
+      const parsedPayload = JSON.parse(payload);
+
+      return { type, payload: parsedPayload };
     } catch (e) {
       console.error(
         `An entry exists for the key "${key}", but it cannot be processed because ->`,

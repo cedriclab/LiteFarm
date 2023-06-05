@@ -264,11 +264,13 @@ const loginController = {
   createSessionFromToken() {
     return async (req, res) => {
       try {
-        const { type } = req.params;
         const { token } = req.body;
 
         // Validate the single-use token, get its payload, and invalidate it
-        const tokenPayload = await validateSingleUseToken(type, token, true);
+        const {
+          // type,
+          payload: tokenPayload,
+        } = await validateSingleUseToken(token, true);
 
         if (!tokenPayload) {
           return res.status(401).send();
