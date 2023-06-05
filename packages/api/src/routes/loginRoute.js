@@ -4,7 +4,7 @@ import loginController from '../controllers/loginController.js';
 import checkGoogleJwt from '../middleware/acl/checkGoogleJwt.js';
 
 router.post('/google', checkGoogleJwt, loginController.loginWithGoogle());
-router.post('/tokens/:type', checkGoogleJwt, loginController.createSessionFromToken());
+router.post('/tokens', checkGoogleJwt, loginController.createSessionFromToken());
 router.post('/', loginController.authenticateUser());
 router.get('/user/:email', loginController.getUserNameByUserEmail());
 
