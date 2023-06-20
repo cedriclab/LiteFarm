@@ -358,7 +358,7 @@
     "NOMINATE_CROP_TOOLTIP": "Nomear este cultivo para inclusão no catálogo do LiteFarm concede à equipe LiteFarm permissão para compartilhar informações sobre este cultivo com um especialista em sua região. Os cultivos aprovadas farão parte do catálogo mostrado a todos os usuários.",
     "ON_YOUR_FARM": "Em sua fazenda",
     "SELECT_A_CROP": "Selecione um cultivo para adicioná-lo à sua fazenda. Use a busca e os filtros para encontrar os cultivos mais rapidamente.",
-    "SPECIES": "Espécies",
+    "SPECIES": "Espécie",
     "DUPLICATE_CROP": "Já existe um cultivo com o mesmo nome, gênero e espécie em sua fazenda"
   },
   "CROP_DETAIL": {
@@ -545,7 +545,7 @@
         "SENSOR_NAME": "Nome do sensor inválido, deve ter entre 1 e 100 caracteres.",
         "SENSOR_LATITUDE": "Valor de latitude inválido, deve estar entre -85 e 85 e menos de 10 casas decimais.",
         "SENSOR_LONGITUDE": " Valor de longitude inválido, deve estar entre -180 e 180. e menos de 10 casas decimais.",
-        "SENSOR_READING_TYPES": "Tipo de leitura inválido detectado: {{ reading_types }}. Vvalores válidos incluem: teor_de_água_no_solo, potencial_de_água_do_solo, temperatura.",
+        "SENSOR_READING_TYPES": "Tipo de leitura inválido detectado: {{ reading_types }}. Valores válidos incluem: teor_de_água_no_solo, potencial_de_água_do_solo, temperatura.",
         "SENSOR_DEPTH": "Valor de profundidade inválido, deve estar entre 0 e 1000.",
         "SENSOR_BRAND": "Nome de marca inválido, deve ter entre 1 e 100 caracteres.",
         "SENSOR_MODEL": "Nome de modelo inválido, deve ter entre 1 e 100 caracteres.",
@@ -844,40 +844,6 @@
       "INFO": "Estimamos o impacto de diferentes tarefas na satisfação laboral usando as pontuações de satisfação e as horas de trabalho gastas em cada tarefa nos registros de turnos.",
       "TITLE": "Satisfação laboral"
     },
-    "NITROGEN_BALANCE": {
-      "ABANDON": "Abandonar programação",
-      "CHOOSE_A_FREQUENCY": "Escolha uma frequência",
-      "CHOOSE_FREQUENCY": "Escolha uma frequência...",
-      "COUNT_MONTHS": "{{count}} mês",
-      "COUNT_MONTHS_one": "{{count}} mês",
-      "COUNT_MONTHS_many": "{{count}} meses",
-      "COUNT_MONTHS_other": "{{count}} meses",
-      "COUNT_MONTHS_plural": "{{count}} meses",
-      "CYCLE_INDICATOR": "Your Nitrogen Balance is on a {{frequency}} months cycle and data will show on: {{refreshDate}}",
-      "FIRST_TIME": "Parece que esta é sua primeira vez executando isso! Por favor, selecione uma frequência para calcular o seu balanço de nitrogênio.",
-      "GO_BACK": "Volte",
-      "HEADER": "cada {{frequency}} mês: {{refreshDate}}",
-      "INFO_1": "O balanço de nitrogênio informa se você aplicou muito ou pouco fertilizante. Esta informação depende dos seus registros de colheita, registros de fertilização e dos créditos de nitrogênio das leguminosas. Você pode receber o balanço no intervalo de tempo desejado.",
-      "INFO_2": "Clique no botão excluir para redefinir sua programação.",
-      "SELECT_FREQUENCY": "selecione uma  frequência",
-      "TITLE": "Balanço de Nitrogênio"
-    },
-    "PEOPLE_FED": {
-      "CALORIES": "Calorias",
-      "FAT": "Gordura",
-      "HEADER": "Número de refeições",
-      "INFO": "Nós estimamos o número de refeições potencialmente fornecidas por sua fazenda com base nos dados de vendas e na composição nutricional dos cultivos. Assumimos que as necessidades nutricionais diárias são divididas igualmente em três refeições por dia",
-      "MEAL_COUNT": "{{count}} refeição",
-      "MEAL_COUNT_one": "{{count}} refeição",
-      "MEAL_COUNT_many": "{{count}} refeições",
-      "MEAL_COUNT_other": "{{count}} refeições",
-      "MEAL_COUNT_plural": "{{count}} refeições",
-      "MEALS": "refeições",
-      "PROTEIN": "Proteínas",
-      "TITLE": "Pessoas Alimentadas",
-      "VITAMIN_A": "Vitamina A",
-      "VITAMIN_C": "Vitamina C"
-    },
     "PRICES": {
       "INFO": "Mostramos a trajetória comparativa entre seus preços de venda em relação aos preços de venda dos mesmos produtos encontrados a uma determinada distância de você, utilizando dados coletados na rede LiteFarm.",
       "NEARBY_FARMS": "O preço de mercado é baseado em {{count}} fazendas na sua região",
@@ -900,15 +866,7 @@
       "TITLE": "Matéria Orgânica do Solo"
     },
     "TITLE": "Insights",
-    "UNAVAILABLE": "Unavailable",
-    "WATER_BALANCE": {
-      "FIRST_TIME": "Parece que esta é sua primeira vez executando isso! Para obter mais informações sobre o balanço hídrico, clique no botão de informações",
-      "INFO_1": "O balanço hídrico informa se seus cultivos têm pouca ou muita água. Ele se baseia em dados meteorológicos e é atualizado pelos dados de irrigação e textura do solo de seus registros de análise de solo.",
-      "INFO_2": "Este recurso não foi amplamente testado em fazendas com baixa densidade de estação meteorológica ao redor, portanto, use com cuidado. Agradecemos os comentários sobre o desempenho dele em sua fazenda.",
-      "NO_SCHEDULE_RUN": "Seu balanço hídrico programado ainda não foi executado. Verifique novamente em dois dias e certifique-se de ter pelo menos uma análise de solo que registre a textura do solo para um campo para ver os dados do balanço hídrico para os cultivos naquele campo. Se o problema persistir, entre em contato com a LiteFarm.",
-      "REGISTER_FARM": "Registre Fazenda",
-      "TITLE": "Balanço hídrico"
-    }
+    "UNAVAILABLE": "Unavailable"
   },
   "INTRODUCE_MAP": {
     "BODY": "O mapa da fazenda tem novos recursos. Ele agora se encontra no menu Minha Fazenda.",
@@ -1486,57 +1444,6 @@
       "VALUE": "Valor"
     }
   },
-  "SHIFT": {
-    "ACTION": "Açao",
-    "ADD_NEW": "Adicionar Novo Turno",
-    "EDIT_SHIFT": {
-      "ADD_CUSTOM_TASK": "Adicionar Tarefa Personalizada",
-      "ADD_TASK": "Adicionar uma Tarefa",
-      "ALL": "Tudo",
-      "ALL_CROPS": "Todas os Cultivos",
-      "ASSIGN_TIME_TO_TASK": "Atribuir tempo para a tarefa por",
-      "CHOOSE_DATE": "Escolha uma data",
-      "CHOOSE_WORKERS": "Escolha trabalhador(a)",
-      "CROPS": "Cultivos",
-      "CROPS_LABEL": "Cultivos",
-      "DID_NOT_PROVIDE_ANSWER": "Não forneceu resposta",
-      "HAPPY": "Contente",
-      "INDIVIDUAL_CROPS": "Cultivos individuais",
-      "LOCATIONS": "Locais",
-      "LOCATIONS_LABEL": "Locais",
-      "MOOD": "Como você se sentiu durante este turno?",
-      "NAME_TASK": "Nome da tarefa personalizada",
-      "NEUTRAL": "Neutra(o)",
-      "RATHER_NOT_SAY": "Prefiro não dizer",
-      "SAD": "Descontente",
-      "SELECT_ALL": "Selecionar tudo",
-      "SELECT_CROPS": "Selecionar Cultivo",
-      "SELECT_FIELDS": "Selecionar Campo",
-      "VERY_HAPPY": "Muito contente",
-      "VERY_SAD": "Muito descontente",
-      "WHAT_TASKS_YOU_DID": "Que tarefas você fez hoje?",
-      "WORKER": "Trabalhador",
-      "WORKER_MOOD": "Como este trabalhador se sentiu durante este turno?"
-    },
-    "MY_SHIFT": {
-      "DELETE_CONFIRMATION": "Tem certeza que deseja deletar este turno?",
-      "DURATION": "Duração",
-      "LOCATION_CROPS": "Localizações/Cultivos",
-      "SUBMITTED_FOR": "Insira para",
-      "TASK": "Tarefa",
-      "TITLE": "Detalhes do turno"
-    },
-    "NAME": "Nome",
-    "NEW_SHIFT": {
-      "STEP_ONE": "Novo turno de trabalho",
-      "STEP_TWO": "Novo turno de trabalho"
-    },
-    "RETIRED": "Retirada",
-    "SHIFT_DATE": "Data do turno de trabalho",
-    "SHIFT_HISTORY": "Histórico de turnos",
-    "TIME_TOTAL": "Total",
-    "TITLE": "Turnos"
-  },
   "SIGNUP": {
     "CHANGES": "Leia sobre as mudanças",
     "EMAIL_INVALID": "Email é inválido",
@@ -1734,7 +1641,7 @@
     "READING": {
       "TYPES": "Tipos de leitura",
       "SOIL_WATER_CONTENT": "Teor de água no solo",
-      "SOIL_WATER_POTENTIAL": "Potencial hídrico no solo",
+      "SOIL_WATER_POTENTIAL": "Potencial de água no solo",
       "TEMPERATURE": "Temperatura",
       "UNKNOWN": "Desconhecido"
     },
@@ -1785,24 +1692,27 @@
       "RETIRE_SUCCESS": "Sensor retirado com sucesso",
       "RETIRE_FAILURE": "Ocorreu um erro ao desativar este sensor"
     },
+    "SENSOR_FORECAST": {
+      "TITLE": "Previsão de hoje",
+      "HIGH_AND_LOW_TEMPERATURE": "Temperatura máxima e mínima: {{high}}{{unit}} / {{low}}{{unit}}",
+      "WEATHER_STATION": "Estação meteorológica: {{weatherStationLocation}}"
+    },
     "TEMPERATURE_READINGS_OF_SENSOR": {
       "TITLE": "Temperatura do solo",
-      "SUBTITLE": "Temperatura MISSING ambiente máxima e mínima de hoje: {{high}}{{units}} / {{low}}{{units}}",
       "Y_AXIS_LABEL": "em {{units}}",
       "C": "Celsius (°C)",
       "F": "Fahrenheit (°F)",
-      "WEATHER_STATION": "Estação meteorológica: {{weatherStationLocation}}",
       "AMBIENT_TEMPERATURE_FOR": "Temperatura ambiente para"
     },
     "SOIL_WATER_POTENTIAL_READINGS_OF_SENSOR": {
-      "TITLE": "Potencial hídrico do solo",
+      "TITLE": "Potencial de água do solo",
       "Y_AXIS_LABEL": "em {{units}}",
       "KPA": "quilopascals (kPa)",
       "PSI": "libras por polegada quadrada (psi)"
     },
     "SOIL_WATER_CONTENT_READINGS_OF_SENSOR": {
-      "TITLE": "MISSING",
-      "Y_AXIS_LABEL": "MISSING"
+      "TITLE": "Teor de água no solo",
+      "Y_AXIS_LABEL": "em {{units}}"
     },
     "READINGS_PREVIEW": {
       "TEMPERATURE": "Temperatura atual do solo",
@@ -1812,11 +1722,11 @@
       "TITLE": "As séries podem ser ocultadas",
       "CONTENT": "Sensores individuais podem ser exibidos ou ocultados clicando em seus rótulos aqui."
     },
-    "SECONDS_AGO": "MISSING",
-    "MINUTES_AGO": "MISSING",
-    "HOURS_AGO": "MISSING",
-    "DAYS_AGO": "MISSING",
-    "MONTHS_AGO": "MISSING"
+    "SECONDS_AGO": "{{time}} segundo(s) atrás",
+    "MINUTES_AGO": "{{time}} minuto(s) atrás",
+    "HOURS_AGO": "{{time}} hora(s) atrás",
+    "DAYS_AGO": "{{time}} dias(s) atrás",
+    "MONTHS_AGO": "{{time}} months(s) atrás"
   },
   "CROP_STATUS_NON_ORGANIC_MISMATCH_MODAL": {
     "TITLE": "Você selecionou uma área não orgânica!",

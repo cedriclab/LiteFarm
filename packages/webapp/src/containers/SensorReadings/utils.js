@@ -1,6 +1,5 @@
 import moment from 'moment';
 import i18n from '../../locales/i18n';
-import { CHOSEN_GRAPH_DATAPOINTS } from './constants';
 
 export const getMiddle = (prop, markers) => {
   let values = markers.map((m) => m[prop]);
@@ -46,33 +45,36 @@ export const getDates = () => {
   let startMidnightUnixTimeMs = new Date(startUnixTimeMs).setHours(0, 0, 0, 0);
   let startUnixTime = parseInt(+startMidnightUnixTimeMs / 1000);
 
-  const formattedEndDate = moment(endMidnightUnixTimeMs).format('MM-DD-YYYY');
+  // E.g. Nepal Time (UTC+5:45) utcOffsetMinutes = -45
+  // E.g. IF Inverse Nepal Time existed (UTC-5:45) utcOffsetMinutes = 45
+  let utcOffsetMinutes = currentDateTime.getTimezoneOffset() % 60;
+  // E.g. Nepal Time (UTC+5:45) forwardUtcOffsetMinutes = 45,
+  // E.g. IF Inverse Nepal Time existed (UTC-5:45) forwardUtcOffsetMinutes = 15
+  let forwardUtcOffsetMinutes = (60 - utcOffsetMinutes) % 60;
+  let backUtcOffsetMinutes = (60 + utcOffsetMinutes) % 60;
+  let forwardAdjustmentUnix = forwardUtcOffsetMinutes * 60;
+  let backAdjustmentUnix = backUtcOffsetMinutes * 60;
 
   return {
     endUnixTime,
     startUnixTime,
     currentDateTime,
-    formattedEndDate,
+    forwardUtcOffsetMinutes,
+    forwardAdjustmentUnix,
+    backAdjustmentUnix,
   };
 };
 
-export const roundDownToNearestChosenPoint = (currentUnixTime) => {
+export const roundDownToNearestTimepoint = (currentUnixTime, utcOffsetMinutes) => {
   const currentHour = new Date(currentUnixTime).getHours();
-  const chosenHours = CHOSEN_GRAPH_DATAPOINTS.map((point) => {
-    const arr = point.split(':');
-    return +arr[0];
-  });
+  const nearestChosenUnixTime = new Date(currentUnixTime).setHours(
+    currentHour,
+    Math.abs(utcOffsetMinutes),
+    0,
+    0,
+  );
 
-  let hour = chosenHours[chosenHours.length - 1];
-  for (let i = 0; i < chosenHours.length; i++) {
-    if (currentHour < chosenHours[i]) {
-      break;
-    }
-    hour = chosenHours[i];
-  }
-  const nearestChosenUnixTime = new Date(currentUnixTime).setHours(hour, 0, 0, 0);
-
-  return moment(nearestChosenUnixTime).format('ddd MMMM D YYYY HH:mm');
+  return moment(nearestChosenUnixTime).format('ddd MMM DD YYYY HH:mm');
 };
 
 const timeDifference = (current, previous) => {

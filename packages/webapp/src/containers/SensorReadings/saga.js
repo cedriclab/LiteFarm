@@ -18,10 +18,12 @@ import { call, put, select, takeLeading, all } from 'redux-saga/effects';
 import { axios, getHeader } from '../saga';
 import { userFarmSelector } from '../userFarmSlice';
 import {
-  CHOSEN_GRAPH_DATAPOINTS,
   OPEN_WEATHER_API_URL_FOR_SENSORS,
   HOUR,
+  CURRENT_DATE_TIME,
+  TEMPERATURE,
   SOIL_WATER_POTENTIAL,
+  SOIL_WATER_CONTENT,
   DAILY_FORECAST_API_URL,
 } from './constants';
 import {
@@ -31,14 +33,15 @@ import {
 } from '../bulkSensorReadingsSlice';
 import { sensorUrl } from '../../apiConfig';
 import { findCenter } from './utils';
-import { CURRENT_DATE_TIME, TEMPERATURE } from './constants';
 import {
   getTemperatureValue,
   getSoilWaterPotentialValue,
 } from '../../components/Map/PreviewPopup/utils.js';
 import { getLanguageFromLocalStorage } from '../../util/getLanguageFromLocalStorage';
-import { getLastUpdatedTime, getDates, roundDownToNearestChosenPoint } from './utils';
+import { getLastUpdatedTime, getDates, roundDownToNearestTimepoint } from './utils';
 import i18n from '../../locales/i18n';
+import { getUnitOptionMap } from '../../util/convert-units/getUnitOptionMap';
+import { ambientTemperature, soilWaterPotential } from '../../util/convert-units/unit';
 
 const sensorReadingsUrl = () => `${sensorUrl}/reading/visualization`;
 
@@ -50,6 +53,14 @@ const convertValues = (type, value, measurement) => {
     return getSoilWaterPotentialValue(value, measurement);
   }
   return value;
+};
+
+const getUnit = (system) => {
+  return {
+    [TEMPERATURE]: getUnitOptionMap()[ambientTemperature[system].defaultUnit].value,
+    [SOIL_WATER_POTENTIAL]: getUnitOptionMap()[soilWaterPotential[system].defaultUnit].value,
+    [SOIL_WATER_CONTENT]: '%',
+  };
 };
 
 export const getSensorsReadings = createAction(`getSensorsReadingsSaga`);
@@ -66,7 +77,14 @@ export function* getSensorsReadingsSaga({ payload }) {
 
   try {
     yield put(bulkSensorReadingsLoading());
-    const { startUnixTime, endUnixTime, currentDateTime, formattedEndDate } = getDates();
+    const {
+      startUnixTime,
+      endUnixTime,
+      currentDateTime,
+      forwardUtcOffsetMinutes,
+      forwardAdjustmentUnix,
+      backAdjustmentUnix,
+    } = getDates();
 
     const header = getHeader(user_id, farm_id);
     const postData = {
@@ -74,7 +92,10 @@ export function* getSensorsReadingsSaga({ payload }) {
       user_id,
       locationIds,
       readingTypes,
-      endDate: formattedEndDate,
+      // Adjustments necessary to align with limitations on OpenWeatherAPI response
+      // OpenWeather time sampling resolution is only hourly on UTC hours
+      startUnixTime: startUnixTime + forwardAdjustmentUnix,
+      endUnixTime: endUnixTime + backAdjustmentUnix,
     };
 
     const result = yield call(axios.post, sensorReadingsUrl(), postData, header);
@@ -93,27 +114,29 @@ export function* getSensorsReadingsSaga({ payload }) {
             .filter((cv) => (cv.value ? cv.value : cv.value === 0))
             .map((cv) => new Date(cv.actual_read_time).valueOf() / 1000),
         );
-        readings.predictedXAxisLabel = roundDownToNearestChosenPoint(currentDateTime);
+        readings.predictedXAxisLabel = roundDownToNearestTimepoint(
+          currentDateTime,
+          forwardUtcOffsetMinutes,
+        );
+        readings.unit = getUnit(measurement)[type];
 
         // reduce sensor data
         let typeReadings = data?.sensorReading[type].reduce((acc, cv) => {
           const currentValueUnixTime = new Date(cv?.read_time).getTime() / 1000;
-          const currentValueUnixTimeMsString = new Date(currentValueUnixTime * 1000).toString();
-          const matchingChosenTimestamp = CHOSEN_GRAPH_DATAPOINTS?.find((g) =>
-            currentValueUnixTimeMsString?.includes(g),
-          );
-          if (
-            matchingChosenTimestamp &&
-            startUnixTime <= currentValueUnixTime &&
-            currentValueUnixTime < endUnixTime
-          ) {
-            const currentDateTime = `${currentValueUnixTimeMsString?.split(':00:00')[0]}:00`;
+          const currentValueDateTimeString = new Date(currentValueUnixTime * 1000).toString();
+
+          if (startUnixTime <= currentValueUnixTime && currentValueUnixTime < endUnixTime) {
+            const hourlyTimezoneOffsetString =
+              forwardUtcOffsetMinutes === 0 ? '00' : Math.abs(forwardUtcOffsetMinutes).toString();
+            const formattedCurrentValueDateTimeString = `${
+              currentValueDateTimeString?.split(`:${hourlyTimezoneOffsetString}:00`)[0]
+            }:${hourlyTimezoneOffsetString}`;
             if (!acc[currentValueUnixTime]) acc[currentValueUnixTime] = {};
             acc[currentValueUnixTime] = {
               [cv?.name]: isNaN(convertValues(type, cv?.value, measurement))
                 ? i18n.t('translation:SENSOR.NO_DATA')
                 : convertValues(type, cv?.value, measurement),
-              [CURRENT_DATE_TIME]: currentDateTime,
+              [CURRENT_DATE_TIME]: formattedCurrentValueDateTimeString,
             };
           }
           return acc;
@@ -142,10 +165,14 @@ export function* getSensorsReadingsSaga({ payload }) {
             }
             openWeatherPromiseList.push(call(axios.get, openWeatherUrl?.toString()));
           }
-          const [openWeatherResponse, predictedWeatherResponse, predictedDailyWeatherResponse] =
-            yield all(openWeatherPromiseList);
+          const [
+            openWeatherResponse,
+            predictedWeatherResponse,
+            predictedDailyWeatherResponse,
+            geocodingResponse,
+          ] = yield all(openWeatherPromiseList);
 
-          readings.stationName = predictedDailyWeatherResponse?.data?.city.name;
+          readings.stationName = geocodingResponse?.data?.[0].name;
           readings.latestTemperatureReadings = {
             tempMin: predictedDailyWeatherResponse?.data?.list?.[0]?.temp?.min,
             tempMax: predictedDailyWeatherResponse?.data?.list?.[0]?.temp?.max,
