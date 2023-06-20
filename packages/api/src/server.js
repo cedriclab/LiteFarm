@@ -96,6 +96,9 @@ Model.knex(knex);
 // import logger
 import logger from './common/logger.js';
 
+// import redis
+import { CONFIG, establishConnection } from './util/redis.js';
+
 // import routes
 import loginRoutes from './routes/loginRoute.js';
 
@@ -297,9 +300,12 @@ if (
   environment === 'production' ||
   environment === 'integration'
 ) {
-  app.listen(port, () => {
-    // eslint-disable-next-line no-console
-    logger.info('LiteFarm Backend listening on port ' + port);
+  // We establish the connection to Redis before starting the server
+  establishConnection(CONFIG).then(() => {
+    app.listen(port, () => {
+      // eslint-disable-next-line no-console
+      logger.info('LiteFarm Backend listening on port ' + port);
+    });
   });
 }
 

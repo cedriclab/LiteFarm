@@ -17,7 +17,13 @@ import UserModel from '../models/userModel.js';
 import PasswordModel from '../models/passwordModel.js';
 import { emails, sendEmail } from '../templates/sendEmailTemplate.js';
 import bcrypt from 'bcryptjs';
-import { createToken } from '../util/jwt.js';
+import {
+  createToken,
+  emitRefreshToken,
+  emitSingleUseToken,
+  getCookieOptions,
+  SingleUseTokenType,
+} from '../util/jwt.js';
 
 const passwordResetController = {
   sendResetEmail() {
@@ -64,7 +70,13 @@ const passwordResetController = {
           reset_token_version: reset_token_version - 1,
           created_at: created_at.getTime(),
         };
-        const token = await createToken('passwordReset', tokenPayload);
+        //const token = await createToken('passwordReset', tokenPayload);
+
+        const token = await emitSingleUseToken(
+          SingleUseTokenType.EMAIL,
+          tokenPayload,
+          { expiration: 24 * 60 * 60 }, // Reset PW token is valid for 24h - NOTE: this is a value in SECONDS, not in MS
+        );
 
         const template_path = emails.PASSWORD_RESET;
         const replacements = {
@@ -85,6 +97,7 @@ const passwordResetController = {
     };
   },
 
+  // TODO: yeet me
   validateToken() {
     return async (req, res) => {
       return res.status(200).json({ isValid: true });
@@ -107,6 +120,12 @@ const passwordResetController = {
         await PasswordModel.query().findById(user_id).patch(pwData);
 
         const id_token = await createToken('access', { user_id });
+
+        // Here we generate the refresh token
+        const refreshToken = await emitRefreshToken({ user_id });
+
+        // Here we set the refresh token as an HTTP-only (see getCookieOptions) cookie
+        res.cookie('refreshToken', refreshToken, getCookieOptions());
 
         const template_path = emails.PASSWORD_RESET_CONFIRMATION;
         const replacements = {

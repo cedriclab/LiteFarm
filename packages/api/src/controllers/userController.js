@@ -24,7 +24,7 @@ import NotificationUserModel from '../models/notificationUserModel.js';
 import FarmModel from '../models/farmModel.js';
 import { transaction, Model } from 'objection';
 import bcrypt from 'bcryptjs';
-import { createToken } from '../util/jwt.js';
+import { createToken, emitRefreshToken, getCookieOptions } from '../util/jwt.js';
 import { emails, sendEmail } from '../templates/sendEmailTemplate.js';
 import ShowedSpotlightModel from '../models/showedSpotlightModel.js';
 
@@ -67,7 +67,7 @@ const userController = {
       await baseController.post(ShowedSpotlightModel, { user_id }, req, { trx });
       await trx.commit();
 
-      // generate token, set to last a week
+      // generate token
       const id_token = await createToken('access', { user_id: userResult.user_id });
 
       // send welcome email
@@ -84,6 +84,12 @@ const userController = {
       } catch (e) {
         console.log('Failed to send email: ', e);
       }
+
+      // Here we generate the refresh token
+      const refreshToken = await emitRefreshToken({ user_id: userResult.user_id });
+
+      // Here we set the refresh token as an HTTP-only (see getCookieOptions) cookie
+      res.cookie('refreshToken', refreshToken, getCookieOptions());
 
       // send token and user data (sans password hash)
       return res.status(201).send({
@@ -454,6 +460,13 @@ const userController = {
       delete result.user;
       delete result.role;
       const id_token = await createToken('access', { user_id });
+
+      // Here we generate the refresh token
+      const refreshToken = await emitRefreshToken({ user_id });
+
+      // Here we set the refresh token as an HTTP-only (see getCookieOptions) cookie
+      res.cookie('refreshToken', refreshToken, getCookieOptions());
+
       return res.status(201).send({
         id_token,
         user: result,
@@ -525,6 +538,13 @@ const userController = {
       delete result.user;
       delete result.role;
       const id_token = await createToken('access', { user_id: sub });
+
+      // Here we generate the refresh token
+      const refreshToken = await emitRefreshToken({ user_id: sub });
+
+      // Here we set the refresh token as an HTTP-only (see getCookieOptions) cookie
+      res.cookie('refreshToken', refreshToken, getCookieOptions());
+
       return res.status(200).send({
         id_token,
         user: result,

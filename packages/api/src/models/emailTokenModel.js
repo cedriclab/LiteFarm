@@ -1,4 +1,4 @@
-import { createToken } from '../util/jwt.js';
+// import { createToken } from '../util/jwt.js';
 import { emails, sendEmail } from '../templates/sendEmailTemplate.js';
 import { Model } from 'objection';
 
@@ -69,11 +69,15 @@ class emailTokenModel extends Model {
             times_sent: timesSent,
           })
           .returning('*');
-        token = await createToken('invite', {
-          ...user,
-          ...userFarm,
-          invitation_id: emailToken.invitation_id,
-        });
+        console.log('emailToken', emailToken); // Just to get rid of warning, yeet me
+        // token = await createToken('invite', {
+        //   ...user,
+        //   ...userFarm,
+        //   invitation_id: emailToken.invitation_id,
+        // });
+
+        // 🤔🤔🤔🤔🤔
+        // ARE THESE TOKENS USED TO SIGN-IN OR ONLY WHEN SIGNED IN, OR BOTH?
       } else {
         // If subsequent email, patch the existing record
         const [emailToken] = await emailTokenModel
@@ -84,11 +88,12 @@ class emailTokenModel extends Model {
             farm_id: userFarm.farm_id,
           })
           .returning('*');
-        token = await createToken('invite', {
-          ...user,
-          ...userFarm,
-          invitation_id: emailToken.invitation_id,
-        });
+        console.log('emailToken', emailToken); // Just to get rid of warning, yeet me
+        // token = await createToken('invite', {
+        //   ...user,
+        //   ...userFarm,
+        //   invitation_id: emailToken.invitation_id,
+        // });
       }
       await this.sendTokenEmail(farm_name, user, token);
     }
