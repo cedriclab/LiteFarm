@@ -845,40 +845,6 @@
       "INFO": "Nous estimons l'impact de différentes tâches sur la satisfaction au travail en utilisant les scores de satisfaction et les heures de travail consacrées à chaque tâche à partir des tâches.",
       "TITLE": "Satisfaction au travail"
     },
-    "NITROGEN_BALANCE": {
-      "ABANDON": "Abandonner l'horaire",
-      "CHOOSE_A_FREQUENCY": "Choisissez une fréquence",
-      "CHOOSE_FREQUENCY": "Choisir la fréquence...",
-      "COUNT_MONTHS": "{{count}} mois",
-      "COUNT_MONTHS_one": "{{count}} mois",
-      "COUNT_MONTHS_many": "{{count}} mois",
-      "COUNT_MONTHS_other": "{{count}} mois",
-      "COUNT_MONTHS_plural": "{{count}} mois",
-      "CYCLE_INDICATOR": "Votre balance d'azote est sur un cycle de {{fréquence}} mois et les données s'afficheront le\u00a0: {{refreshDate}}",
-      "FIRST_TIME": "On dirait que c'est la première fois que vous utilisez cela\u00a0! Veuillez sélectionner une fréquence pour calculer votre bilan d'azote.",
-      "GO_BACK": "Retour",
-      "HEADER": "Tous les {{fréquence}} mois\u00a0: {{refreshDate}}",
-      "INFO_1": "Le bilan d'azote vous indique si vous avez appliqué trop ou trop peu d'engrais. Il repose sur vos journaux de récolte, les crédits d'azote des légumineuses et les journaux de fertilisation. Vous pouvez exécuter le bilan sur l'intervalle de temps souhaité.",
-      "INFO_2": "Cliquez sur le bouton Supprimer pour réinitialiser votre emploi du temps.",
-      "SELECT_FREQUENCY": "Sélectionner la fréquence",
-      "TITLE": "Bilan de l'azote"
-    },
-    "PEOPLE_FED": {
-      "CALORIES": "Calories",
-      "FAT": "Gras",
-      "HEADER": "Nombre de repas",
-      "INFO": "Nous estimons le nombre de repas potentiels fournis par votre ferme sur la base des données de soldes et des bases de données sur la composition des cultures. Nous supposons que les besoins quotidiens sont répartis également sur trois repas par jour.",
-      "MEAL_COUNT": "{{count}} repas",
-      "MEAL_COUNT_one": "{{count}} repas",
-      "MEAL_COUNT_many": "{{count}} repas",
-      "MEAL_COUNT_other": "{{count}} repas",
-      "MEAL_COUNT_plural": "{{count}} repas",
-      "MEALS": "repas",
-      "PROTEIN": "Protéine",
-      "TITLE": "Personnes nourries",
-      "VITAMIN_A": "Vitamine A",
-      "VITAMIN_C": "Vitamine C"
-    },
     "PRICES": {
       "INFO": "Nous vous montrons la tendance de vos prix de vente pour chacun de vos produits, et la comparons aux prix de ventes des mêmes produits rapportés par d’autres fermes proches de vous qui font partie du réseau LiteFarm.",
       "NEARBY_FARMS": "Le prix moyen du réseau est basé sur les prix de {{count}} autres fermes dans votre région",
@@ -901,15 +867,7 @@
       "TITLE": "Matière organique du Sol"
     },
     "TITLE": "Mesures additionnelles",
-    "UNAVAILABLE": "Indisponible",
-    "WATER_BALANCE": {
-      "FIRST_TIME": "On dirait que c'est la première fois que vous exécutez cela\u00a0! Pour plus d'informations sur ce que cela fait, veuillez cliquer sur le bouton d'information pour voir.",
-      "INFO_1": "Le bilan hydrique vous indique si vos cultures ont trop ou pas assez d'eau. Il s'appuie sur les données météorologiques, et il est mis à jour par vos données d'irrigation et de texture du sol à partir de vos journaux d'analyse de sol.",
-      "INFO_2": "Cette fonctionnalité n'a pas été largement testée dans les fermes avec une faible densité de stations météorologiques environnantes, donc utilisez-la avec prudence. Nous apprécions les commentaires sur ses performances pour votre ferme.",
-      "NO_SCHEDULE_RUN": "Votre bilan hydrique programmé n'a pas encore été exécuté, veuillez vérifier dans deux jours et vous assurer d'avoir au moins une analyse de sol qui enregistre la texture du sol pour un champ pour voir les données de bilan hydrique pour les cultures dans ce champ. Si le le problème persiste, veuillez contacter LiteFarm.",
-      "REGISTER_FARM": "Enregistrer la ferme",
-      "TITLE": "Equilibre de l'eau"
-    }
+    "UNAVAILABLE": "Indisponible"
   },
   "INTRODUCE_MAP": {
     "BODY": "La carte de la ferme intègre de nouvelles fonctionnalités. Elle se trouve maintenant dans le menu Ma Ferme.",
@@ -1486,57 +1444,6 @@
       "VALUE": "Valeur"
     }
   },
-  "SHIFT": {
-    "ACTION": "Action",
-    "ADD_NEW": "Ajouter nouveau poste de travail",
-    "EDIT_SHIFT": {
-      "ADD_CUSTOM_TASK": "Ajouter une tâche personnalisée",
-      "ADD_TASK": "Ajouter une tâche",
-      "ALL": "Tous les emplacements",
-      "ALL_CROPS": "Toutes les cultures",
-      "ASSIGN_TIME_TO_TASK": "Attribuer l'heure à la tâche par",
-      "CHOOSE_DATE": "Choisissez une date",
-      "CHOOSE_WORKERS": "Choisissez un travailleur",
-      "CROPS": "Cultures",
-      "CROPS_LABEL": "Cultures",
-      "DID_NOT_PROVIDE_ANSWER": "Aucune réponse entrée",
-      "HAPPY": "Content",
-      "INDIVIDUAL_CROPS": "Cultures individuelles",
-      "LOCATIONS": "Emplacements",
-      "LOCATIONS_LABEL": "Emplacements",
-      "MOOD": "Comment sentez vous après cette tâche\u00a0?",
-      "NAME_TASK": "Nom de la tâche personnalisée",
-      "NEUTRAL": "Neutre",
-      "RATHER_NOT_SAY": "Je préfère ne pas en parler",
-      "SAD": "Triste",
-      "SELECT_ALL": "Tout sélectionner",
-      "SELECT_CROPS": "Sélectionner les cultures",
-      "SELECT_FIELDS": "Sélectionner les emplacements",
-      "VERY_HAPPY": "Très heureux",
-      "VERY_SAD": "Très triste",
-      "WHAT_TASKS_YOU_DID": "Quelles tâches avez-vous effectuées aujourd'hui\u00a0?",
-      "WORKER": "Travailleur",
-      "WORKER_MOOD": "Comment se sentait cet travailleur pendant qu'il travaillait\u00a0?"
-    },
-    "MY_SHIFT": {
-      "DELETE_CONFIRMATION": "Êtes-vous certains que vous voulez supprimer cette poste\u00a0?",
-      "DURATION": "Duration",
-      "LOCATION_CROPS": "Emplacements des cultures",
-      "SUBMITTED_FOR": "Soumis pour",
-      "TASK": "Tâche",
-      "TITLE": "Détails de poste"
-    },
-    "NAME": "Nom",
-    "NEW_SHIFT": {
-      "STEP_ONE": "Ajouter un poste de travail",
-      "STEP_TWO": "Ajouter un poste de travail"
-    },
-    "RETIRED": "Zone Retiré",
-    "SHIFT_DATE": "Date",
-    "SHIFT_HISTORY": "Histoire du poste de travail",
-    "TIME_TOTAL": "Totale",
-    "TITLE": "Postes"
-  },
   "SIGNUP": {
     "CHANGES": "En savoir plus sur les changements",
     "EMAIL_INVALID": "Courriel non-valide",
@@ -1785,13 +1692,16 @@
       "RETIRE_SUCCESS": "Retrait du capteur réussi",
       "RETIRE_FAILURE": "Il y a eu une erreur lors du retrait de ce capteur"
     },
+    "SENSOR_FORECAST": {
+      "TITLE": "La météo d'aujourd'hui",
+      "HIGH_AND_LOW_TEMPERATURE": "Haute et basse température\u00a0: {{high}}{{unit}} / {{low}}{{unit}}",
+      "WEATHER_STATION": "Station météorologique\u00a0: {{weatherStationLocation}}"
+    },
     "TEMPERATURE_READINGS_OF_SENSOR": {
       "TITLE": "Température du sol",
-      "SUBTITLE": "Température MISSING ambiante haute et basse d'aujourd'hui\u00a0: {{high}}{{units}} / {{low}}{{units}}",
       "Y_AXIS_LABEL": "en {{units}}",
       "C": "Celsius (°C)",
       "F": "Fahrenheit (°F)",
-      "WEATHER_STATION": "Station météorologique\u00a0: {{weatherStationLocation}}",
       "AMBIENT_TEMPERATURE_FOR": "Température ambiante pour"
     },
     "SOIL_WATER_POTENTIAL_READINGS_OF_SENSOR": {
@@ -1801,8 +1711,8 @@
       "PSI": "livres par pouce carré (psi)"
     },
     "SOIL_WATER_CONTENT_READINGS_OF_SENSOR": {
-      "TITLE": "MISSING",
-      "Y_AXIS_LABEL": "MISSING"
+      "TITLE": "Teneur en eau du sol",
+      "Y_AXIS_LABEL": "en {{units}}"
     },
     "READINGS_PREVIEW": {
       "TEMPERATURE": "Température actuelle du sol",
@@ -1812,11 +1722,11 @@
       "TITLE": "Les séries peuvent être masquées",
       "CONTENT": "Les capteurs individuels peuvent être affichés ou masqués en cliquant sur leurs étiquettes ici."
     },
-    "SECONDS_AGO": "MISSING",
-    "MINUTES_AGO": "MISSING",
-    "HOURS_AGO": "MISSING",
-    "DAYS_AGO": "MISSING",
-    "MONTHS_AGO": "MISSING"
+    "SECONDS_AGO": "il y a {{time}} seconde(s)",
+    "MINUTES_AGO": "il y a {{time}} minute(s)",
+    "HOURS_AGO": "il y a {{time}} heure(s)",
+    "DAYS_AGO": "il y a {{time}} jour(s)",
+    "MONTHS_AGO": "il y a {{time}} mois"
   },
   "CROP_STATUS_NON_ORGANIC_MISMATCH_MODAL": {
     "TITLE": "Vous avez choisi un emplacement non biologique\u00a0!",
